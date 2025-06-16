@@ -29,7 +29,7 @@ public class WeatherForecastService {
 
     private WeatherApiResponse fetchWeather(double lat, double lon) {
         String url = String.format(
-                "%s?latitude=%.4f&longitude=%.4f&daily=weathercode,temperature_2m_max,temperature_2m_min,pressure_msl,sunshine_duration&timezone=auto",
+                "%s?latitude=%.4f&longitude=%.4f&daily=weather_code,temperature_2m_max,temperature_2m_min,surface_pressure_mean,sunshine_duration&timezone=auto",
                 apiUrl, lat, lon
         );
         try{
