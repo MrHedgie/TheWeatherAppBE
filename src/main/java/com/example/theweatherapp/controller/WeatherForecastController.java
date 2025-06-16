@@ -8,6 +8,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/forecast")
 @RequiredArgsConstructor
+@Validated
 public class WeatherForecastController {
 
     private final WeatherForecastService weatherForecastService;
