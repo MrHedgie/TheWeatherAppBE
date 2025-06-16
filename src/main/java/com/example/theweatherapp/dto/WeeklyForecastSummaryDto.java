@@ -4,6 +4,7 @@ public record WeeklyForecastSummaryDto(
         double averagePressure,
         double averageSunshineHours,
         double weeklyTempMin,
-        double weeklyTempMax
+        double weeklyTempMax,
+        String summary
 ) {
 }

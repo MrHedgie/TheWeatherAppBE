@@ -32,7 +32,6 @@ public class WeatherForecastService {
                 "%s?latitude=%.4f&longitude=%.4f&daily=weathercode,temperature_2m_max,temperature_2m_min,pressure_msl,sunshine_duration&timezone=auto",
                 apiUrl, lat, lon
         );
-
         try{
             return restTemplate.getForObject(url, WeatherApiResponse.class);
         } catch (RestClientException e) {
