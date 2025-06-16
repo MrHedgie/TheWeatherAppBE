@@ -21,8 +21,8 @@ public class WeatherForecastService {
 
     private static final double PANEL_POWER = 2.5;
     private static final double PANEL_EFFICIENCY = 0.2;
-    private static final int FORECAST_DAYS = 7; //no magic numbers :)
-    private static final int NUMBER_OF_DECIMAL_PLACES = 2;
+    private static final int FORECAST_DAYS = 7;
+    private static final int DECIMAL_PLACES_SCALE = 2;
     private final RestTemplate restTemplate;
     @Value("${open-meteo.api.url}")
     private String apiUrl;
@@ -32,7 +32,7 @@ public class WeatherForecastService {
                 "%s?latitude=%.4f&longitude=%.4f&daily=weathercode,temperature_2m_max,temperature_2m_min,pressure_msl,sunshine_duration&timezone=auto",
                 apiUrl, lat, lon
         );
-        try {
+        try{
             return restTemplate.getForObject(url, WeatherApiResponse.class);
         } catch (RestClientException e) {
             throw new RuntimeException(e);
@@ -41,7 +41,7 @@ public class WeatherForecastService {
 
     private double calculateGeneratedEnergy(double sunshineDuration){
         return BigDecimal.valueOf(PANEL_POWER * (sunshineDuration / 3600) * PANEL_EFFICIENCY)
-                .setScale(NUMBER_OF_DECIMAL_PLACES, RoundingMode.HALF_UP)
+                .setScale(DECIMAL_PLACES_SCALE, RoundingMode.HALF_UP)
                 .doubleValue();
     }
 
@@ -49,7 +49,7 @@ public class WeatherForecastService {
         WeatherApiResponse response = fetchWeather(lat, lon);
         DailyData dailyData = response.dailyData();
         List<DailyForecastDto> forecasts = new ArrayList<>();
-        for(int i = 0; i < FORECAST_DAYS; i++){
+        for(int i = 0; i < FORECAST_DAYS; i++) {
             forecasts.add(new DailyForecastDto(
                     dailyData.getDates().get(i),
                     dailyData.getWeatherCodes().get(i),
@@ -65,11 +65,11 @@ public class WeatherForecastService {
         WeatherApiResponse response = fetchWeather(lat, lon);
         DailyData dailyData = response.dailyData();
         return new WeeklyForecastSummaryDto(
-                BigDecimal.valueOf(dailyData.getPressure().stream().mapToDouble(d->d).average().orElse(0))
-                        .setScale(NUMBER_OF_DECIMAL_PLACES, RoundingMode.HALF_UP).doubleValue(),
-                BigDecimal.valueOf(dailyData.getSunshineDuration().stream().mapToDouble(d->d).average().orElse(0)).doubleValue(),
-
-        )
+                BigDecimal.valueOf(dailyData.getPressure().stream().mapToDouble(d->d).average().orElse(0)).setScale(1, RoundingMode.HALF_UP).doubleValue(),
+                BigDecimal.valueOf(dailyData.getSunshineDuration().stream().mapToDouble(d->d).average().orElse(0)).setScale(1, RoundingMode.HALF_UP).doubleValue(),
+                dailyData.getTempMin().stream().mapToDouble(d->d).min().orElse(Integer.MIN_VALUE),
+                dailyData.getTempMax().stream().mapToDouble(d->d).max().orElse(Integer.MAX_VALUE),
+                dailyData.getWeatherCodes().stream().filter(code -> code >= 60 && code <= 99).count() >= 4 ? "Rainy" : "Not Rainy"
+        );
     }
-
 }
