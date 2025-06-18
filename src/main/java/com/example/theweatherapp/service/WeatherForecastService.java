@@ -31,11 +31,11 @@ public class WeatherForecastService {
 
     private void validateWeatherResponse(WeatherApiResponse response) {
         if (response.dailyData() == null) {
-            throw new WeatherDataException("Weather response doesn't contain daily data");
+            throw new WeatherDataException("Weather response is missing daily data");
         }
         DailyData dailyData = response.dailyData();
         if (dailyData.getDates() == null || dailyData.getDates().isEmpty()) {
-            throw new WeatherDataException("Weather response doesn't contain date information");
+            throw new WeatherDataException("Weather response is missing date information");
         }
         int expectedSize = Math.min(dailyData.getDates().size(), FORECAST_DAYS);
 
@@ -102,12 +102,16 @@ public class WeatherForecastService {
     public WeeklyForecastSummaryDto getWeeklySummary(double lat, double lon) {
         WeatherApiResponse response = fetchWeather(lat, lon);
         DailyData dailyData = response.dailyData();
+
+        double averagePressure = dailyData.getPressure().stream().mapToDouble(Double::doubleValue).average().orElse(0);
+        double averageSunshineDuration = dailyData.getSunshineDuration().stream().mapToDouble(Double::doubleValue).average().orElse(0);
+
         return new WeeklyForecastSummaryDto(
-                BigDecimal.valueOf(dailyData.getPressure().stream().mapToDouble(Double::doubleValue).average().orElse(0)).setScale(1, RoundingMode.HALF_UP).doubleValue(),
-                BigDecimal.valueOf(dailyData.getSunshineDuration().stream().mapToDouble(Double::doubleValue).average().orElse(0)).setScale(1, RoundingMode.HALF_UP).doubleValue(),
+                BigDecimal.valueOf(averagePressure).setScale(1, RoundingMode.HALF_UP).doubleValue(),
+                BigDecimal.valueOf(averageSunshineDuration).setScale(1, RoundingMode.HALF_UP).doubleValue(),
                 dailyData.getTempMin().stream().mapToDouble(Double::doubleValue).min().orElse(Double.NaN),
                 dailyData.getTempMax().stream().mapToDouble(Double::doubleValue).max().orElse(Double.NaN),
-                dailyData.getWeatherCodes().stream().filter(code -> code >= 60 && code <= 99).count() >= 4 ? "Rainy" : "Not Rainy"
+                dailyData.getWeatherCodes().stream().filter(code -> code >= 60 && code <= 99).count() >= 4 ? "Z opadami" : "Bez opadów"
         );
     }
 }
