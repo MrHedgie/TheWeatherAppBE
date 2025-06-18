@@ -12,13 +12,13 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(WeatherApiException.class)
-    public ResponseEntity<String> handleWeatherApiException() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Unable to fetch weather data");
+    public ResponseEntity<String> handleWeatherApiException(WeatherApiException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
     }
 
     @ExceptionHandler(WeatherDataException.class)
-    public ResponseEntity<String> handleWeatherDataException() {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Unable to process weather data");
+    public ResponseEntity<String> handleWeatherDataException(WeatherDataException e) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(e.getMessage());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
