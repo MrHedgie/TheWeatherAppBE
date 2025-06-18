@@ -115,7 +115,7 @@ class WeatherForecastControllerTest {
                 25200.0,
                 -2.5,
                 18.3,
-                "Rainy"
+                "Z opadami"
         );
 
         when(weatherForecastService.getWeeklySummary(latitude, longitude))
