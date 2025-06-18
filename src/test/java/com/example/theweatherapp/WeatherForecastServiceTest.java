@@ -77,7 +77,7 @@ class WeatherForecastServiceTest {
         assertEquals(3600, summary.averageSunshineSeconds()); // Rounded
         assertEquals(7.0, summary.weeklyTempMin());
         assertEquals(24.0, summary.weeklyTempMax());
-        assertEquals("Rainy", summary.summary());
+        assertEquals("Z opadami", summary.summary());
     }
     @Test
     void shouldThrowIfWeatherResponseIsNull() {
