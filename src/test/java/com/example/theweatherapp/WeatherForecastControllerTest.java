@@ -132,6 +132,6 @@ class WeatherForecastControllerTest {
                 .andExpect(jsonPath("$.averageSunshineSeconds").value(25200.0))
                 .andExpect(jsonPath("$.weeklyTempMin").value(-2.5))
                 .andExpect(jsonPath("$.weeklyTempMax").value(18.3))
-                .andExpect(jsonPath("$.summary").value("Rainy"));
+                .andExpect(jsonPath("$.summary").value("Z opadami"));
     }
 }
