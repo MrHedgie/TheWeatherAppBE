@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/forecast")
 @RequiredArgsConstructor
 @Validated
-@CrossOrigin("http://localhost:3000/")
+@CrossOrigin("https://theweatherapp-2xy1.onrender.com/")
 public class WeatherForecastController {
 
     private final WeatherForecastService weatherForecastService;
